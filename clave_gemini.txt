@@ -1,0 +1,5 @@
+Read-Host AQ.Ab8RN6LWYoKH1ETou7UajbNEX8VHL5X-s8UpBitgEDvfJ57qXQ| Set-Content clave_gemini.txt
+(Get-Content clave_gemini.txt).Length
+
+Set-Content clave_gemini.txt "AQ.Ab8RN6KF7D0NgtRQNigGnUMwJwBtrmNF-pLxpwOmYqG_bhCCqQ"
+                              

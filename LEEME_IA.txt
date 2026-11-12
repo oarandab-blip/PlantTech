@@ -1,0 +1,28 @@
+INTEGRACION DE IA (CLAUDE) EN PLANT TECH
+========================================
+Archivos a copiar sobre los de tu proyecto (reemplazando):
+  app.py             -> carpeta principal
+  probar_claude.py   -> carpeta principal (opcional, para probar la conexion)
+
+No necesitas instalar ninguna libreria extra (requirements.txt no cambia).
+
+1) Crea una clave en https://console.anthropic.com  (API Keys -> Create Key).
+   Necesitas saldo/creditos en la cuenta. Empieza con  sk-ant-
+
+2) Guardala en el archivo clave_claude.txt (carpeta del proyecto):
+     Read-Host "Pega tu clave y pulsa Enter" | Set-Content clave_claude.txt
+   o bien con variable de entorno:  $env:ANTHROPIC_API_KEY = "sk-ant-..."
+
+3) Prueba la conexion:
+     .\.venv\Scripts\python.exe probar_claude.py
+
+4) Inicia:
+     .\.venv\Scripts\python.exe app.py
+   Abre http://127.0.0.1:5000, Ctrl + F5 y pulsa "Resena con IA".
+
+OPCIONAL
+  Otro modelo:  $env:PLANTTECH_MODELO_IA = "claude-sonnet-5-5"
+  (por defecto usa claude-haiku-5-5 y, si no existe, claude-sonnet-5-5)
+
+SEGURIDAD: no compartas clave_claude.txt ni lo subas a GitHub/foros/chats.
+Aqui solo se envia el nombre y la especie de la planta.
