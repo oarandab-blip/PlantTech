@@ -111,6 +111,22 @@ def inicializar_bd():
 
 inicializar_bd()
 
+def promover_admins_desde_entorno():
+    """Convierte en administradores a los usuarios listados en la variable
+    PLANTTECH_ADMINS (separados por coma). Se ejecuta al arrancar, al registrar
+    y al iniciar sesión, así funciona aunque la base de datos se reinicie."""
+    admins = [u.strip().lower()
+              for u in os.environ.get("PLANTTECH_ADMINS", "").split(",") if u.strip()]
+    if not admins:
+        return
+    conexion = conectar_bd()
+    for u in admins:
+        conexion.execute("UPDATE usuarios SET rol = 'admin' WHERE usuario = ?", (u,))
+    conexion.commit()
+    conexion.close()
+
+promover_admins_desde_entorno()
+
 def usuario_actual_id():
     return session.get("usuario_id")
 
@@ -209,6 +225,7 @@ def registrar():
     conexion.commit()
     nuevo_id = cursor.lastrowid
     conexion.close()
+    promover_admins_desde_entorno()
 
     session["usuario_id"] = nuevo_id
     return jsonify(
@@ -224,6 +241,8 @@ def login():
 
     if not usuario or not password:
         return jsonify(error="Ingresa usuario y contraseña."), 400
+
+    promover_admins_desde_entorno()
 
     conexion = conectar_bd()
     registro = conexion.execute(
