@@ -206,6 +206,10 @@ def registrar():
         INSERT INTO usuarios(nombre, usuario, password_hash, creado_en)
         VALUES (?, ?, ?, ?)
     """, (nombre, usuario, generate_password_hash(password), ahora))
+    # Usuarios que serán administradores al registrarse (variable PLANTTECH_ADMINS, separados por coma)
+    admins = [u.strip().lower() for u in os.environ.get("PLANTTECH_ADMINS", "").split(",") if u.strip()]
+    if usuario in admins:
+        conexion.execute("UPDATE usuarios SET rol = 'admin' WHERE id = ?", (cursor.lastrowid,))
     conexion.commit()
     nuevo_id = cursor.lastrowid
     conexion.close()
