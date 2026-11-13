@@ -355,5 +355,46 @@
         <p>Plant Tech © 2026 · Los intervalos de riego son orientativos.</p>
       </footer>
     </div>
+
+    <!-- Botón para mostrar u ocultar contraseñas (se aplica a todos los campos de contraseña) -->
+    <style>
+      .pw-wrap { position: relative; }
+      .pw-wrap input { padding-right: 48px; }
+      .pw-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: 0;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 4px;
+      }
+    </style>
+    <script>
+      document.querySelectorAll('input[type="password"]').forEach(function (campo) {
+        var envoltura = document.createElement("div");
+        envoltura.className = "pw-wrap";
+        campo.parentNode.insertBefore(envoltura, campo);
+        envoltura.appendChild(campo);
+
+        var boton = document.createElement("button");
+        boton.type = "button";
+        boton.className = "pw-toggle";
+        boton.textContent = "👁";
+        boton.setAttribute("aria-label", "Mostrar contraseña");
+        boton.addEventListener("click", function () {
+          var visible = campo.type === "text";
+          campo.type = visible ? "password" : "text";
+          boton.textContent = visible ? "👁" : "🙈";
+          boton.setAttribute(
+            "aria-label",
+            visible ? "Mostrar contraseña" : "Ocultar contraseña"
+          );
+        });
+        envoltura.appendChild(boton);
+      });
+    </script>
   </body>
 </html>
