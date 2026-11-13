@@ -206,10 +206,6 @@ def registrar():
         INSERT INTO usuarios(nombre, usuario, password_hash, creado_en)
         VALUES (?, ?, ?, ?)
     """, (nombre, usuario, generate_password_hash(password), ahora))
-    # Usuarios que serán administradores al registrarse (variable PLANTTECH_ADMINS, separados por coma)
-    admins = [u.strip().lower() for u in os.environ.get("PLANTTECH_ADMINS", "").split(",") if u.strip()]
-    if usuario in admins:
-        conexion.execute("UPDATE usuarios SET rol = 'admin' WHERE id = ?", (cursor.lastrowid,))
     conexion.commit()
     nuevo_id = cursor.lastrowid
     conexion.close()
@@ -1363,10 +1359,21 @@ def archivo_demasiado_grande(error):
 if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "--crear-admin":
         sys.exit(crear_admin_desde_consola(sys.argv[2]))
+
+    # HTTPS local con certificado temporal (requiere: pip install cryptography)
+    usar_https = os.environ.get("PLANTTECH_HTTPS", "1") == "1"
+    try:
+        import cryptography  # noqa: F401
+    except ImportError:
+        usar_https = False
+        print("Aviso: falta 'cryptography'; se usará http. Instálala con: pip install cryptography")
+
+    esquema = "https" if usar_https else "http"
     print("==============================================")
     print("       PLANT TECH - SERVIDOR FLASK")
     print("==============================================")
-    print("Servidor: http://127.0.0.1:5000")
+    print(f"Servidor: {esquema}://127.0.0.1:5000")
     print("==============================================")
     app.run(host="127.0.0.1", port=5000,
+            ssl_context="adhoc" if usar_https else None,
             debug=os.environ.get("PLANTTECH_DEBUG", "1") == "1")
